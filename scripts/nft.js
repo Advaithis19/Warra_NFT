@@ -3,21 +3,26 @@ import "dotenv/config";
 import { NFTStorage, File } from "nft.storage";
 import fs from "fs";
 import fetch from "node-fetch";
+import contract from "../contracts/Warra-NFT.json" assert { type: "json" };
 
 const POLYGON_URL = process.env.POLYGON_URL;
 const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
-const NFT_STORAGE_API_KEY = process.env.NFT_STORAGE_API_KEY
+const NFT_STORAGE_API_KEY = process.env.NFT_STORAGE_API_KEY;
+const MINTER_ADDRESS = process.env.MINTER_ADDRESS
+let MINTER_PRIVATE_KEY = process.env.MINTER_PRIVATE_KEY
 
+let WarraNFTContract;
 const setup = async (req, res, next) => {
-    const node = RINKEBY_RPC_URL;
+    const node = POLYGON_URL;
     const provider = new ethers.providers.WebSocketProvider(node);
   
     let url = req.originalUrl;
-  
+    let privatekey = MINTER_PRIVATE_KEY
+    let wallet = new ethers.Wallet(privatekey, provider);
     console.log("Using wallet address " + wallet.address);
   
     let contractaddress = CONTRACT_ADDRESS;
-    p2pConveyanceContract = new ethers.Contract(
+    WarraNFTContract = new ethers.Contract(
       contractaddress,
       contract.abi,
       wallet
@@ -30,13 +35,23 @@ const mintToken = async (req, res, next) => {
     try{
         console.log(req.body);
         const client = new NFTStorage({ token: NFT_STORAGE_API_KEY });
+        let attribs = []
+        for(let key in req.body){
+            let obj = {}
+            if(key == "name" || key == "description" || key == "receiver_address"){
+                continue;
+            }
+            obj[key] = req.body[key];
+            attribs.push(obj);
+        }
+        console.log(attribs);
         const metaData = await client.store({
         name: req.body.name,
         description: req.body.description,
         image: new File([await fs.promises.readFile("./scripts/Flipkart-logo.png")], "Flipkart-logo.png", {
         type: "image/png",
         }),
-        attributes: [
+        attributes: attribs /*[
             {
                 "trait_type": "Serial number",
                 "value": req.body.serial_no
@@ -49,11 +64,19 @@ const mintToken = async (req, res, next) => {
                 "trait_type": "warranty duration",
                 "value": req.body.duration
             }
-        ]
+        ]*/
         });
 
         const url = metaData.url;
-        req.data = url.toString();
+        const duration = req.body.duration 
+        const nftReceiver = req.body.receiver_address
+        let mintedToken = await WarraNFTContract.createWarranty(url, duration);
+        await mintedToken.wait();
+        let mintedTokenId = await WarraNFTContract.getTokenCounter();
+        let nftTransfer = await WarraNFTContract.transfer(nftReceiver, mintedTokenId.sub(1).toString());
+        await nftTransfer.wait();
+
+        req.data = mintedTokenId.toString();
         next();
   } catch (err) {
     console.log(err);
@@ -63,4 +86,4 @@ const mintToken = async (req, res, next) => {
 };
 
 
-export { mintToken };
+export { setup, mintToken };
