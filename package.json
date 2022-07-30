@@ -27,5 +27,8 @@
   "bugs": {
     "url": "https://github.com/Advaithis19/warra-nft/issues"
   },
+  "engines": {
+    "node": "16.16.0"
+  },
   "homepage": "https://github.com/Advaithis19/warra-nft#readme"
 }
