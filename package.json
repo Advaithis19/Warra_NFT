@@ -22,7 +22,8 @@
     "fs": "^0.0.1-security",
     "moralis": "^1.10.0",
     "nft.storage": "^7.0.0",
-    "node-fetch": "^3.2.9"
+    "node-fetch": "^3.2.9",
+    "twilio": "^3.80.0"
   },
   "bugs": {
     "url": "https://github.com/Advaithis19/warra-nft/issues"
