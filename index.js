@@ -10,6 +10,6 @@ app.post("/api/mint", setup, mintToken, function(req,res){
     res.json({data: req.data});
 })
 
-app.listen(3000, () =>
+app.listen((process.env.PORT || 3000), () =>
   console.log("Listening on port 3000...")
 );
