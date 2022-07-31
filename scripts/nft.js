@@ -85,7 +85,7 @@ const mintToken = async (req, res, next) => {
       mintedTokenId.sub(1).toString()
     );
     await nftTransfer.wait();
-
+    console.log(mintedTokenId.sub(1).toString());
     const accountSid = process.env.TWILIO_ACCOUNT_SID;
     const authToken = process.env.TWILIO_AUTH_TOKEN;
     let twiliopn = process.env.TWILIO_PHONE_NO;
