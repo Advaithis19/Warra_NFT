@@ -94,9 +94,11 @@ const mintToken = async (req, res, next) => {
     twilioClient.messages
       .create({
         body: `
-                    Hi there! You have received a Warranty NFT with token ID: ${mintedTokenId
-                      .sub(1)
-                      .toString()} at contract address ${CONTRACT_ADDRESS}.
+                    Hi ${
+                      req.body.customer_name
+                    }! You have received a Warranty NFT with token ID: ${mintedTokenId
+          .sub(1)
+          .toString()} at contract address ${CONTRACT_ADDRESS}.
                     You will be able to view your Warranty NFT in your MetaMask Wallet with address: ${
                       req.body.receiver_address
                     }.
