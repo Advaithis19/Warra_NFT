@@ -1,0 +1,35 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Warra_NFT
+    network: rinkeby
+    source:
+      address: "0x356B2483d44790beBb71e5f03efcE68B29ecFb5B"
+      abi: Warra_NFT
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - OwnershipTransferred
+        - Transfer
+        - activityOnTokenCalled
+      abis:
+        - name: Warra_NFT
+          file: ./abis/Warra_NFT.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: activityOnTokenCalled(uint256,string,string,address,address,uint256)
+          handler: handleactivityOnTokenCalled
+      file: ./src/warra-nft.ts
