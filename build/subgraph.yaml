@@ -1,6 +1,6 @@
 specVersion: 0.0.4
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: Warra_NFT
@@ -17,8 +17,8 @@ dataSources:
         - Activity
       abis:
         - name: Warra_NFT
-          file: ./abis/Warra_NFT.json
+          file: Warra_NFT\abis\Warra_NFT.json
       eventHandlers:
         - event: activityOnTokenCalled(uint256,string,string,address,address,uint256)
           handler: handleactivityOnTokenCalled
-      file: ./src/warra-nft.ts
+      file: Warra_NFT\Warra_NFT.wasm
