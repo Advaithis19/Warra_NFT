@@ -109,7 +109,7 @@ const mintToken = async (req, res, next) => {
         to: req.body.phone_no,
       })
       .then((message) => console.log(message.sid));
-    req.data = mintedTokenId.toString();
+    req.data = mintedTokenId.sub(1).toString();
     next();
   } catch (err) {
     console.log(err);
