@@ -2,28 +2,30 @@ import ethers from "ethers";
 import "dotenv/config";
 import { NFTStorage, File } from "nft.storage";
 import fs from "fs";
-import fetch from "node-fetch";
+// import fetch from "node-fetch";
 import contract from "../contracts/Warra-NFT.json" assert { type: "json" };
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 
-const POLYGON_URL = process.env.POLYGON_URL;
-const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
+// const POLYGON_RPC_URL = process.env.POLYGON_URL;
+const RINKEBY_RPC_URL = process.env.RINKEBY_RPC_URL;
+// const POLYGON_CONTRACT_ADDRESS = process.env.POLYGON_CONTRACT_ADDRESS;
+const RINKEBY_CONTRACT_ADDRESS = process.env.RINKEBY_CONTRACT_ADDRESS;
 const NFT_STORAGE_API_KEY = process.env.NFT_STORAGE_API_KEY;
 const MINTER_ADDRESS = process.env.MINTER_ADDRESS;
 let MINTER_PRIVATE_KEY = process.env.MINTER_PRIVATE_KEY;
 
 let WarraNFTContract;
 const setup = async (req, res, next) => {
-  const node = POLYGON_URL;
+  const node = RINKEBY_RPC_URL;
   const provider = new ethers.providers.WebSocketProvider(node);
 
-  let url = req.originalUrl;
+  // let url = req.originalUrl;
   let privatekey = MINTER_PRIVATE_KEY;
   let wallet = new ethers.Wallet(privatekey, provider);
   console.log("Using wallet address " + wallet.address);
 
-  let contractaddress = CONTRACT_ADDRESS;
+  let contractaddress = RINKEBY_CONTRACT_ADDRESS;
   WarraNFTContract = new ethers.Contract(contractaddress, contract.abi, wallet);
 
   next();
@@ -31,7 +33,7 @@ const setup = async (req, res, next) => {
 
 const mintToken = async (req, res, next) => {
   try {
-    console.log(req.body);
+    console.log("body", req.body);
     const client = new NFTStorage({ token: NFT_STORAGE_API_KEY });
     let attribs = [];
     for (let key in req.body) {
@@ -47,7 +49,7 @@ const mintToken = async (req, res, next) => {
       obj[key] = req.body[key];
       attribs.push(obj);
     }
-    console.log(attribs);
+    console.log("attributes", attribs);
     const metaData = await client.store({
       name: req.body.name,
       description: req.body.description,
@@ -98,7 +100,7 @@ const mintToken = async (req, res, next) => {
                       req.body.customer_name
                     }! You have received a Warranty NFT with token ID: ${mintedTokenId
           .sub(1)
-          .toString()} at contract address ${CONTRACT_ADDRESS}.
+          .toString()} at contract address ${RINKEBY_CONTRACT_ADDRESS}.
                     You will be able to view your Warranty NFT in your MetaMask Wallet with address: ${
                       req.body.receiver_address
                     }.
