@@ -1,0 +1,9 @@
+type Activity @entity {
+  id: ID!
+  tokenId: BigInt! # uint256
+  tokenUri: String! # string
+  activity: String! # string
+  caller: Bytes! # address
+  associated: Bytes! # address
+  timestamp: BigInt! # uint256
+}

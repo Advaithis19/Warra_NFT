@@ -1,0 +1,24 @@
+specVersion: 0.0.4
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Warra_NFT
+    network: rinkeby
+    source:
+      address: "0x6e2c7515D34F5851eB49A9eE8971aAabd085ef94"
+      abi: Warra_NFT
+      startBlock: 11120958
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Activity
+      abis:
+        - name: Warra_NFT
+          file: ./abis/Warra_NFT.json
+      eventHandlers:
+        - event: activityOnTokenCalled(uint256,string,string,address,address,uint256)
+          handler: handleactivityOnTokenCalled
+      file: ./src/warra-nft.ts
